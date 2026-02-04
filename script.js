@@ -14,8 +14,31 @@ document.addEventListener('DOMContentLoaded', function() {
             // Track clicks (you can integrate with analytics here)
             const linkText = this.querySelector('span').textContent;
             console.log(`Link clicked: ${linkText}`);
+            
+            // Add ripple effect
+            createRipple(e, this);
         });
     });
+    
+    // Create ripple effect function
+    function createRipple(event, element) {
+        const ripple = document.createElement('span');
+        const rect = element.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = event.clientX - rect.left - size / 2;
+        const y = event.clientY - rect.top - size / 2;
+        
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        ripple.classList.add('ripple');
+        
+        element.appendChild(ripple);
+        
+        setTimeout(() => {
+            ripple.remove();
+        }, 600);
+    }
     
     // Add hover sound effect (optional)
     linkItems.forEach(link => {

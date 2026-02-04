@@ -205,3 +205,20 @@ body {
 .link-item:nth-child(6) { animation-delay: 0.6s; }
 .link-item:nth-child(7) { animation-delay: 0.7s; }
 .link-item:nth-child(8) { animation-delay: 0.8s; }
+
+/* Ripple effect */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    transform: scale(0);
+    animation: ripple-animation 0.6s linear;
+    pointer-events: none;
+}
+
+@keyframes ripple-animation {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
