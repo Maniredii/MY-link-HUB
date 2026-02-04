@@ -75,6 +75,27 @@ Main colors are defined in CSS variables. Key colors:
 └── README.md       # This file
 ```
 
+## Deployment Options
+
+### GitHub Pages (Free)
+1. Push your code to GitHub
+2. Go to repository Settings → Pages
+3. Select source branch (main/master)
+4. Your site will be available at `https://yourusername.github.io/repository-name`
+
+### Netlify (Free)
+1. Connect your GitHub repository to Netlify
+2. Deploy automatically on every push
+3. Custom domain support available
+
+### Vercel (Free)
+1. Import your GitHub repository
+2. Automatic deployments
+3. Excellent performance optimization
+
+### Traditional Web Hosting
+Upload all files to your web hosting provider's public folder.
+
 ## Browser Support
 
 - Chrome/Edge 88+
