@@ -1,5 +1,35 @@
 // Add click tracking and smooth interactions
 document.addEventListener('DOMContentLoaded', function() {
+    // Typing animation for status badge
+    const typingBadge = document.getElementById('typingBadge');
+    if (typingBadge) {
+        const text = 'OPEN FOR WORK';
+        let index = 0;
+        let isDeleting = false;
+        
+        function type() {
+            if (!isDeleting && index < text.length) {
+                typingBadge.textContent = text.substring(0, index + 1);
+                index++;
+                setTimeout(type, 150);
+            } else if (!isDeleting && index === text.length) {
+                setTimeout(() => {
+                    isDeleting = true;
+                    type();
+                }, 2000);
+            } else if (isDeleting && index > 0) {
+                typingBadge.textContent = text.substring(0, index - 1);
+                index--;
+                setTimeout(type, 100);
+            } else if (isDeleting && index === 0) {
+                isDeleting = false;
+                setTimeout(type, 500);
+            }
+        }
+        
+        type();
+    }
+    
     const linkItems = document.querySelectorAll('.link-item');
     
     // Add click tracking
