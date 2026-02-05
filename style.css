@@ -77,6 +77,33 @@ body {
     box-shadow: 3px 3px 0 #000;
     white-space: nowrap;
     z-index: 20;
+    overflow: hidden;
+}
+
+.status-badge::after {
+    content: 'OPEN FOR WORK';
+    display: inline-block;
+    animation: typing 3s steps(13, end) infinite, blink 0.75s step-end infinite;
+    border-right: 2px solid #000;
+    padding-right: 2px;
+}
+
+@keyframes typing {
+    0%, 100% {
+        width: 0;
+    }
+    20%, 80% {
+        width: 100%;
+    }
+}
+
+@keyframes blink {
+    0%, 50% {
+        border-color: #000;
+    }
+    51%, 100% {
+        border-color: transparent;
+    }
 }
 
 .profile-name {
