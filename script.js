@@ -1,46 +1,37 @@
 // Add click tracking and smooth interactions
 document.addEventListener('DOMContentLoaded', function() {
-    // Custom Cursor
-    const cursorDot = document.querySelector('.cursor-dot');
-    const cursorOutline = document.querySelector('.cursor-outline');
+    // Custom Brutalist Cursor
+    const customCursor = document.querySelector('.custom-cursor');
     
-    let mouseX = 0, mouseY = 0;
-    let outlineX = 0, outlineY = 0;
-    
-    // Update cursor position
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
+    if (customCursor) {
+        // Update cursor position
+        document.addEventListener('mousemove', (e) => {
+            customCursor.style.left = e.clientX + 'px';
+            customCursor.style.top = e.clientY + 'px';
+        });
         
-        // Move dot immediately
-        cursorDot.style.left = mouseX + 'px';
-        cursorDot.style.top = mouseY + 'px';
-    });
-    
-    // Smooth follow for outline
-    function animateOutline() {
-        outlineX += (mouseX - outlineX) * 0.15;
-        outlineY += (mouseY - outlineY) * 0.15;
+        // Add hover effect on interactive elements
+        const interactiveElements = document.querySelectorAll('a, button, .link-item, .project-card');
         
-        cursorOutline.style.left = outlineX + 'px';
-        cursorOutline.style.top = outlineY + 'px';
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                document.body.classList.add('cursor-hover');
+            });
+            
+            el.addEventListener('mouseleave', () => {
+                document.body.classList.remove('cursor-hover');
+            });
+        });
         
-        requestAnimationFrame(animateOutline);
+        // Add click effect
+        document.addEventListener('mousedown', () => {
+            document.body.classList.add('cursor-click');
+        });
+        
+        document.addEventListener('mouseup', () => {
+            document.body.classList.remove('cursor-click');
+        });
     }
-    animateOutline();
-    
-    // Add hover effect on interactive elements
-    const interactiveElements = document.querySelectorAll('a, button, .link-item, .project-card');
-    
-    interactiveElements.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            document.body.classList.add('cursor-hover');
-        });
-        
-        el.addEventListener('mouseleave', () => {
-            document.body.classList.remove('cursor-hover');
-        });
-    });
     
     // Visitor counter - only count unique sessions
     function updateVisitorCount() {
