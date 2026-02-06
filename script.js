@@ -33,23 +33,34 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Visitor counter - Real-time with CountAPI
+    // Visitor counter - Real-time with CountAPI (Optimized)
     function updateVisitorCount() {
-        const namespace = 'manideep-linkhub'; // Your unique namespace
-        const key = 'visits'; // Counter key
+        const counterElement = document.getElementById('visitorCount');
+        const namespace = 'manideep-linkhub';
+        const key = 'visits';
         const apiUrl = `https://api.countapi.xyz/hit/${namespace}/${key}`;
         
-        // Fetch and increment count
-        fetch(apiUrl)
-            .then(response => response.json())
+        // Show loading state
+        if (counterElement) {
+            counterElement.textContent = '...';
+        }
+        
+        // Set timeout for API call
+        const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Timeout')), 3000)
+        );
+        
+        const fetchPromise = fetch(apiUrl).then(response => response.json());
+        
+        // Race between fetch and timeout
+        Promise.race([fetchPromise, timeoutPromise])
             .then(data => {
                 const count = data.value;
                 
-                // Animate the count
-                const counterElement = document.getElementById('visitorCount');
+                // Quick animation
                 if (counterElement) {
-                    let current = 0;
-                    const increment = Math.ceil(count / 50);
+                    let current = Math.max(0, count - 10);
+                    const increment = 2;
                     const timer = setInterval(() => {
                         current += increment;
                         if (current >= count) {
@@ -57,16 +68,27 @@ document.addEventListener('DOMContentLoaded', function() {
                             clearInterval(timer);
                         }
                         counterElement.textContent = current.toLocaleString();
-                    }, 20);
+                    }, 30);
                 }
             })
             .catch(error => {
                 console.error('Error fetching visitor count:', error);
-                // Fallback to localStorage if API fails
-                const fallbackCount = parseInt(localStorage.getItem('visitorCount') || '0') + 1;
-                localStorage.setItem('visitorCount', fallbackCount);
-                document.getElementById('visitorCount').textContent = fallbackCount.toLocaleString();
+                // Fallback to cached count or default
+                const cachedCount = localStorage.getItem('cachedVisitorCount');
+                if (cachedCount && counterElement) {
+                    counterElement.textContent = parseInt(cachedCount).toLocaleString();
+                } else if (counterElement) {
+                    counterElement.textContent = '0';
+                }
             });
+        
+        // Cache the count for offline use
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                localStorage.setItem('cachedVisitorCount', data.value);
+            })
+            .catch(() => {});
     }
     
     updateVisitorCount();
