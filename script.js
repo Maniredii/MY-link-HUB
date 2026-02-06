@@ -33,39 +33,40 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Visitor counter - only count unique sessions
+    // Visitor counter - Real-time with CountAPI
     function updateVisitorCount() {
-        const sessionKey = 'visitorSession';
-        const countKey = 'visitorCount';
-        const sessionDuration = 30 * 60 * 1000; // 30 minutes in milliseconds
+        const namespace = 'manideep-linkhub'; // Your unique namespace
+        const key = 'visits'; // Counter key
+        const apiUrl = `https://api.countapi.xyz/hit/${namespace}/${key}`;
         
-        // Check if there's an active session
-        const lastVisit = localStorage.getItem(sessionKey);
-        const now = new Date().getTime();
-        
-        let count = parseInt(localStorage.getItem(countKey)) || 0;
-        
-        // Only increment if no session or session expired
-        if (!lastVisit || (now - parseInt(lastVisit)) > sessionDuration) {
-            count += 1;
-            localStorage.setItem(countKey, count);
-            localStorage.setItem(sessionKey, now);
-        }
-        
-        // Animate the count
-        const counterElement = document.getElementById('visitorCount');
-        if (counterElement) {
-            let current = 0;
-            const increment = Math.ceil(count / 50);
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= count) {
-                    current = count;
-                    clearInterval(timer);
+        // Fetch and increment count
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const count = data.value;
+                
+                // Animate the count
+                const counterElement = document.getElementById('visitorCount');
+                if (counterElement) {
+                    let current = 0;
+                    const increment = Math.ceil(count / 50);
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= count) {
+                            current = count;
+                            clearInterval(timer);
+                        }
+                        counterElement.textContent = current.toLocaleString();
+                    }, 20);
                 }
-                counterElement.textContent = current.toLocaleString();
-            }, 20);
-        }
+            })
+            .catch(error => {
+                console.error('Error fetching visitor count:', error);
+                // Fallback to localStorage if API fails
+                const fallbackCount = parseInt(localStorage.getItem('visitorCount') || '0') + 1;
+                localStorage.setItem('visitorCount', fallbackCount);
+                document.getElementById('visitorCount').textContent = fallbackCount.toLocaleString();
+            });
     }
     
     updateVisitorCount();
