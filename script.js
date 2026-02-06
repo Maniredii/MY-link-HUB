@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Visitor counter - Real-time with CountAPI (Optimized)
+    // Visitor counter - Real-time with CountAPI (Fixed)
     function updateVisitorCount() {
         const counterElement = document.getElementById('visitorCount');
         const namespace = 'manideep-linkhub';
@@ -45,17 +45,20 @@ document.addEventListener('DOMContentLoaded', function() {
             counterElement.textContent = '...';
         }
         
-        // Set timeout for API call
-        const timeoutPromise = new Promise((_, reject) => 
-            setTimeout(() => reject(new Error('Timeout')), 3000)
-        );
+        // Fetch with timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
         
-        const fetchPromise = fetch(apiUrl).then(response => response.json());
-        
-        // Race between fetch and timeout
-        Promise.race([fetchPromise, timeoutPromise])
+        fetch(apiUrl, { signal: controller.signal })
+            .then(response => {
+                clearTimeout(timeoutId);
+                return response.json();
+            })
             .then(data => {
                 const count = data.value;
+                
+                // Cache the count
+                localStorage.setItem('cachedVisitorCount', count);
                 
                 // Quick animation
                 if (counterElement) {
@@ -72,8 +75,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => {
+                clearTimeout(timeoutId);
                 console.error('Error fetching visitor count:', error);
-                // Fallback to cached count or default
+                
+                // Fallback to cached count
                 const cachedCount = localStorage.getItem('cachedVisitorCount');
                 if (cachedCount && counterElement) {
                     counterElement.textContent = parseInt(cachedCount).toLocaleString();
@@ -81,14 +86,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     counterElement.textContent = '0';
                 }
             });
-        
-        // Cache the count for offline use
-        fetch(apiUrl)
-            .then(response => response.json())
-            .then(data => {
-                localStorage.setItem('cachedVisitorCount', data.value);
-            })
-            .catch(() => {});
     }
     
     updateVisitorCount();
