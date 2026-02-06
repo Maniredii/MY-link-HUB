@@ -12,6 +12,56 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: none;
+}
+
+/* Custom Cursor */
+.cursor-dot {
+    width: 8px;
+    height: 8px;
+    background: #000;
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease;
+    transform: translate(-50%, -50%);
+}
+
+.cursor-outline {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #000;
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.2s ease;
+    transform: translate(-50%, -50%);
+}
+
+body.cursor-hover .cursor-dot {
+    transform: translate(-50%, -50%) scale(1.5);
+    background: #00ff88;
+}
+
+body.cursor-hover .cursor-outline {
+    width: 60px;
+    height: 60px;
+    border-color: #00ff88;
+    border-width: 3px;
+}
+
+/* Hide custom cursor on touch devices */
+@media (hover: none) and (pointer: coarse) {
+    body {
+        cursor: auto;
+    }
+    
+    .cursor-dot,
+    .cursor-outline {
+        display: none;
+    }
 }
 
 .container {
