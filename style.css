@@ -111,7 +111,31 @@ body {
     line-height: 1.6;
     font-weight: 400;
     max-width: 500px;
-    margin: 0 auto;
+    margin: 0 auto 15px auto;
+}
+
+.visitor-counter {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.05);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: #333;
+    font-weight: 600;
+    margin-top: 10px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.visitor-counter i {
+    font-size: 1rem;
+    color: #666;
+}
+
+.visitor-counter span {
+    color: #000;
+    font-weight: 700;
 }
 
 .section-title {
@@ -368,6 +392,15 @@ body {
     
     .profile-bio {
         font-size: 0.95rem;
+    }
+    
+    .visitor-counter {
+        font-size: 0.85rem;
+        padding: 6px 12px;
+    }
+    
+    .visitor-counter i {
+        font-size: 0.9rem;
     }
     
     .phone-frame {

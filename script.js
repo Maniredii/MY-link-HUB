@@ -1,5 +1,32 @@
 // Add click tracking and smooth interactions
 document.addEventListener('DOMContentLoaded', function() {
+    // Visitor counter
+    function updateVisitorCount() {
+        let count = localStorage.getItem('visitorCount');
+        if (!count) {
+            count = 0;
+        }
+        count = parseInt(count) + 1;
+        localStorage.setItem('visitorCount', count);
+        
+        // Animate the count
+        const counterElement = document.getElementById('visitorCount');
+        if (counterElement) {
+            let current = 0;
+            const increment = Math.ceil(count / 50);
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= count) {
+                    current = count;
+                    clearInterval(timer);
+                }
+                counterElement.textContent = current.toLocaleString();
+            }, 20);
+        }
+    }
+    
+    updateVisitorCount();
+    
     // Create audio element for click sound
     const clickSound = new Audio('matthewvakaliuk73627-mouse-click-290204.mp3');
     clickSound.volume = 0.3; // Set volume to 30%
