@@ -1,13 +1,23 @@
 // Add click tracking and smooth interactions
 document.addEventListener('DOMContentLoaded', function() {
-    // Visitor counter
+    // Visitor counter - only count unique sessions
     function updateVisitorCount() {
-        let count = localStorage.getItem('visitorCount');
-        if (!count) {
-            count = 0;
+        const sessionKey = 'visitorSession';
+        const countKey = 'visitorCount';
+        const sessionDuration = 30 * 60 * 1000; // 30 minutes in milliseconds
+        
+        // Check if there's an active session
+        const lastVisit = localStorage.getItem(sessionKey);
+        const now = new Date().getTime();
+        
+        let count = parseInt(localStorage.getItem(countKey)) || 0;
+        
+        // Only increment if no session or session expired
+        if (!lastVisit || (now - parseInt(lastVisit)) > sessionDuration) {
+            count += 1;
+            localStorage.setItem(countKey, count);
+            localStorage.setItem(sessionKey, now);
         }
-        count = parseInt(count) + 1;
-        localStorage.setItem('visitorCount', count);
         
         // Animate the count
         const counterElement = document.getElementById('visitorCount');
