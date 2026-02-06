@@ -33,40 +33,43 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Visitor counter - Real-time with CountAPI (Simplified)
+    // Visitor counter - Using alternative API
     function updateVisitorCount() {
         const counterElement = document.getElementById('visitorCount');
-        const namespace = 'manideep-linkhub';
-        const key = 'visits';
-        const apiUrl = `https://api.countapi.xyz/hit/${namespace}/${key}`;
         
         // Show loading state
         if (counterElement) {
             counterElement.textContent = '...';
         }
         
-        fetch(apiUrl)
+        // Try CountAPI first
+        fetch('https://api.countapi.xyz/hit/manideep-linkhub/visits')
             .then(response => response.json())
             .then(data => {
                 const count = data.value;
-                
-                // Cache the count
                 localStorage.setItem('cachedVisitorCount', count);
-                
-                // Display count immediately
                 if (counterElement) {
                     counterElement.textContent = count.toLocaleString();
                 }
             })
-            .catch(error => {
-                console.error('Error fetching visitor count:', error);
+            .catch(() => {
+                // Fallback: Use localStorage with session tracking
+                const sessionKey = 'visitorSession_v2';
+                const countKey = 'visitorCount_v2';
+                const now = Date.now();
+                const lastVisit = localStorage.getItem(sessionKey);
                 
-                // Fallback to cached count
-                const cachedCount = localStorage.getItem('cachedVisitorCount');
-                if (cachedCount && counterElement) {
-                    counterElement.textContent = parseInt(cachedCount).toLocaleString();
-                } else if (counterElement) {
-                    counterElement.textContent = '0';
+                let count = parseInt(localStorage.getItem(countKey)) || 0;
+                
+                // Only increment if new session (30 min timeout)
+                if (!lastVisit || (now - parseInt(lastVisit)) > 1800000) {
+                    count += 1;
+                    localStorage.setItem(countKey, count);
+                    localStorage.setItem(sessionKey, now);
+                }
+                
+                if (counterElement) {
+                    counterElement.textContent = count.toLocaleString();
                 }
             });
     }
