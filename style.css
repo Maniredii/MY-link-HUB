@@ -15,7 +15,7 @@ body {
     cursor: none;
 }
 
-/* Custom Brutalist Cursor */
+/* Custom Brutalist Cursor - Simple & Bold */
 .custom-cursor {
     width: 20px;
     height: 20px;
@@ -23,50 +23,43 @@ body {
     pointer-events: none;
     z-index: 9999;
     transform: translate(-50%, -50%);
-    transition: all 0.15s ease;
+    transition: transform 0.1s ease;
 }
 
 .cursor-inner {
     width: 100%;
     height: 100%;
     background: #000;
-    border: 2px solid #000;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.cursor-inner::after {
+.cursor-inner::before {
     content: '';
     position: absolute;
-    width: 6px;
-    height: 6px;
+    width: 10px;
+    height: 10px;
     background: #00ff88;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-body.cursor-hover .custom-cursor {
-    width: 50px;
-    height: 50px;
+    transition: all 0.2s ease;
 }
 
 body.cursor-hover .cursor-inner {
     background: transparent;
-    border: 3px solid #000;
+    border: none;
+    transform: scale(1);
 }
 
-body.cursor-hover .cursor-inner::after {
-    width: 10px;
-    height: 10px;
-    background: #ffb366;
+body.cursor-hover .cursor-inner::before {
+    display: none;
 }
 
-body.cursor-click .custom-cursor {
-    width: 16px;
-    height: 16px;
+body.cursor-click .cursor-inner {
+    transform: scale(0.8);
 }
 
-body.cursor-click .cursor-inner::after {
+body.cursor-click .cursor-inner::before {
     background: #ff0080;
 }
 
