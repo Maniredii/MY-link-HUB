@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Visitor counter - Real-time with CountAPI (Fixed)
+    // Visitor counter - Real-time with CountAPI (Simplified)
     function updateVisitorCount() {
         const counterElement = document.getElementById('visitorCount');
         const namespace = 'manideep-linkhub';
@@ -45,37 +45,20 @@ document.addEventListener('DOMContentLoaded', function() {
             counterElement.textContent = '...';
         }
         
-        // Fetch with timeout
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
-        
-        fetch(apiUrl, { signal: controller.signal })
-            .then(response => {
-                clearTimeout(timeoutId);
-                return response.json();
-            })
+        fetch(apiUrl)
+            .then(response => response.json())
             .then(data => {
                 const count = data.value;
                 
                 // Cache the count
                 localStorage.setItem('cachedVisitorCount', count);
                 
-                // Quick animation
+                // Display count immediately
                 if (counterElement) {
-                    let current = Math.max(0, count - 10);
-                    const increment = 2;
-                    const timer = setInterval(() => {
-                        current += increment;
-                        if (current >= count) {
-                            current = count;
-                            clearInterval(timer);
-                        }
-                        counterElement.textContent = current.toLocaleString();
-                    }, 30);
+                    counterElement.textContent = count.toLocaleString();
                 }
             })
             .catch(error => {
-                clearTimeout(timeoutId);
                 console.error('Error fetching visitor count:', error);
                 
                 // Fallback to cached count
