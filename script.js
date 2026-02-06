@@ -1,5 +1,9 @@
 // Add click tracking and smooth interactions
 document.addEventListener('DOMContentLoaded', function() {
+    // Create audio element for click sound
+    const clickSound = new Audio('matthewvakaliuk73627-mouse-click-290204.mp3');
+    clickSound.volume = 0.3; // Set volume to 30%
+    
     // Typing animation for status badge
     const typingBadge = document.getElementById('typingBadge');
     if (typingBadge) {
@@ -30,11 +34,15 @@ document.addEventListener('DOMContentLoaded', function() {
         type();
     }
     
-    const linkItems = document.querySelectorAll('.link-item');
+    const linkItems = document.querySelectorAll('.link-item, .project-card');
     
     // Add click tracking
     linkItems.forEach(link => {
         link.addEventListener('click', function(e) {
+            // Play click sound
+            clickSound.currentTime = 0; // Reset sound to start
+            clickSound.play().catch(err => console.log('Audio play failed:', err));
+            
             // Add a subtle click effect
             this.style.transform = 'scale(0.98)';
             setTimeout(() => {
@@ -42,8 +50,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 150);
             
             // Track clicks (you can integrate with analytics here)
-            const linkText = this.querySelector('span').textContent;
-            console.log(`Link clicked: ${linkText}`);
+            const linkText = this.querySelector('span') || this.querySelector('h3');
+            if (linkText) {
+                console.log(`Link clicked: ${linkText.textContent}`);
+            }
             
             // Add ripple effect
             createRipple(e, this);
